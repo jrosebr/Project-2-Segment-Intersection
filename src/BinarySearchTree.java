@@ -34,11 +34,16 @@ public class BinarySearchTree<K> implements OrderedSet<K> {
          * <p>
          * Constructs a new Node<K> with the given values for fields.
          */
-        public Node(K data, Node<K> left, Node<K> right) {
-            // delete this line and add your code
+
+        //Assigns the values to the inputed variables
+        public Node(K data, Node<K> left, Node<K> right)
+        {
+            this.data = data;
+            this.left = left;
+            this.right = right;
         }
 
-        /*
+        /**
          * Provide the get() method required by the Location interface.
          */
         @Override
@@ -60,8 +65,26 @@ public class BinarySearchTree<K> implements OrderedSet<K> {
          * heights in the child Node<K>s are correct. Returns true iff the height
          * actually changed. This function *must* run in O(1) time.
          */
-        protected boolean updateHeight() {
-            return true;  // delete this line and add your code
+        protected boolean updateHeight()
+        {
+            int left_height = get_height(left);
+            int right_height = get_height(right);
+
+            //Checks if the Nodes children are smaller than this Node's current height - 1
+            if (left_height < this.height - 1 && right_height < this.height - 1)
+            {
+                this.height = 1 + Math.max(left_height, right_height);
+                return true;
+            }
+
+            //Checks if either of the Node's children are larger than this Node's current height
+            else if (left_height >= this.height || right_height >= this.height)
+            {
+                this.height = 1 + Math.max(left_height, right_height);
+                return true;
+            }
+
+            return false;
         }
 
         /**
@@ -70,9 +93,42 @@ public class BinarySearchTree<K> implements OrderedSet<K> {
          * Returns the location of the Node<K> containing the inorder predecessor
          * of this Node<K>.
          */
+
+        //BinaryTree Code Lab 3
+
+        // Return the last node wrt. inorder in this subtree.
+        public Node last() {
+
+
+            Node current = this;
+
+            //Check if right is null
+            if (current.right == null)
+            {
+                return current;
+            }
+
+            else
+            {
+                return current.right.last();
+            }
+        }
+
         @Override
-        public Location<K> previous() {
-            return null;  // delete this line and add your code
+        public Location<K> previous()
+        {
+
+            Node current = this;
+
+            if (current.left != null)
+            {
+                return left.last();
+            }
+
+            else
+            {
+                return current.prevAncestor();
+            }
         }
 
         /**
