@@ -114,6 +114,52 @@ public class BinarySearchTree<K> implements OrderedSet<K> {
             }
         }
 
+        public Node first() {
+
+            Node current = this;
+
+            if (current.left == null)
+            {
+                return current;
+            }
+
+            else
+            {
+                return current.left.first();
+            }
+        }
+
+        public Node prevAncestor() {
+
+            Node current = this;
+
+            if (current.parent != null && current == parent.left)
+            {
+                return parent.prevAncestor();
+            }
+
+            else
+            {
+                return parent;
+            }
+        }
+
+        public Node nextAncestor()
+        {
+
+            Node current = this;
+
+            if (current.parent != null && current == parent.right)
+            {
+                return parent.nextAncestor();
+            }
+
+            else
+            {
+                return parent;
+            }
+        }
+
         @Override
         public Location<K> previous()
         {
@@ -139,7 +185,18 @@ public class BinarySearchTree<K> implements OrderedSet<K> {
          */
         @Override
         public Location<K> next() {
-            return null;  // delete this line and add your code
+
+            Node current = this;
+
+            if (current.right != null)
+            {
+                return right.first();
+            }
+
+            else
+            {
+                return current.nextAncestor();
+            }
         }
 
         public boolean isAVL() {
@@ -173,8 +230,33 @@ public class BinarySearchTree<K> implements OrderedSet<K> {
      * Looks up the key in this tree and, if found, returns the
      * location containing the key.
      */
+
+    protected Node<K> find(K key, Node<K> curr, Node<K> parent)
+    {
+        if (curr == null)
+            return parent;
+
+        else if (lessThan.test(key, curr.data))
+            return find(key, curr.left, curr);
+
+        else if (lessThan.test(curr.data, key))
+            return find(key, curr.right, curr);
+
+        else
+            return curr;
+    }
+
     public Node<K> search(K key) {
-        return null;  // delete this line and add your code
+        Node<K> n = find(key, root, null);
+
+        if (n == null)
+            return null;
+
+        else if (n.data.equals(key))
+            return n;
+
+        else
+            return null;
     }
 
     /**
@@ -192,7 +274,9 @@ public class BinarySearchTree<K> implements OrderedSet<K> {
      * Clears all the keys from this tree. Runs in O(1) time!
      */
     public void clear() {
-        // delete this line and add your code
+        root.left = null;
+        root.right = null;
+        numNodes = 0;
     }
 
     /**
