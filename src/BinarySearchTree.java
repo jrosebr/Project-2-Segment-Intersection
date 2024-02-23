@@ -67,24 +67,20 @@ public class BinarySearchTree<K> implements OrderedSet<K> {
          */
         protected boolean updateHeight()
         {
+            int original_height = get_height(this);
+
             int left_height = get_height(left);
             int right_height = get_height(right);
 
-            //Checks if the Nodes children are smaller than this Node's current height - 1
-            if (left_height < this.height - 1 && right_height < this.height - 1)
+            if (original_height == 1 + Math.max(left_height, right_height))
+                return false;
+
+            else
             {
-                this.height = 1 + Math.max(left_height, right_height);
+                height = 1 + Math.max(left_height, right_height);
                 return true;
             }
 
-            //Checks if either of the Node's children are larger than this Node's current height
-            else if (left_height >= this.height || right_height >= this.height)
-            {
-                this.height = 1 + Math.max(left_height, right_height);
-                return true;
-            }
-
-            return false;
         }
 
         /**
@@ -265,7 +261,7 @@ public class BinarySearchTree<K> implements OrderedSet<K> {
      * Returns the height of this tree. Runs in O(1) time!
      */
     public int height() {
-        return 0;  // delete this line and add your code
+        return get_height(root);
     }
 
     /**
@@ -302,7 +298,15 @@ public class BinarySearchTree<K> implements OrderedSet<K> {
      * Node<K> containing the key), or null if the key is already present.
      */
     public Node<K> insert(K key) {
-        return null;  // delete this line and add your code
+        Node<K> n = find(key, root, null);
+
+        if (n == null)
+            return null;
+
+        else
+        {
+
+        }
     }
 
     /**
