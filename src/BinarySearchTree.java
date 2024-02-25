@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.BiPredicate;
@@ -298,15 +299,34 @@ public class BinarySearchTree<K> implements OrderedSet<K> {
      * Node<K> containing the key), or null if the key is already present.
      */
     public Node<K> insert(K key) {
+
         Node<K> n = find(key, root, null);
 
         if (n == null)
-            return null;
+        {
+            root = new Node<K>(key);
+            root.updateHeight();
+            return root;
+        }
+
+        else if (lessThan.test(key, n.data))
+        {
+            Node<K> x = new Node<K>(key);
+            root.updateHeight();
+            n.left = x;
+            return x;
+        }
+
+        else if (lessThan.test(n.data, key))
+        {
+            Node<K> x = new Node<K>(key);
+            root.updateHeight();
+            n.right = x;
+            return x;
+        }
 
         else
-        {
-
-        }
+        return null;  //duplicate
     }
 
     /**
@@ -331,14 +351,71 @@ public class BinarySearchTree<K> implements OrderedSet<K> {
      * nothing happens.
      */
     public void remove(K key) {
-        // delete this line and add your code
+        root = remove_helper(root, key);
+    }
+
+    private Node remove_helper(Node<K> curr, K key)
+    {
+        if (curr == null)
+        {
+            root.updateHeight();
+            return null;
+        }
+
+        else if (lessThan.test(key, curr.data))
+        { // remove in left subtree
+            curr.left = remove_helper(curr.left, key);
+            root.updateHeight();
+            return curr;
+        }
+
+        else if (lessThan.test(curr.data, key))
+        { // remove in right subtree
+            curr.right = remove_helper(curr.right, key);
+            root.updateHeight();
+            return curr;
+        }
+
+        else
+        { // remove this node
+            if (curr.left == null)
+            return curr.right;
+
+            else if (curr.right == null)
+            {
+                root.updateHeight();
+                return curr.left;
+            }
+
+            else // two children, replace with first of right subtree
+            {
+                Node<K> min = curr.right.first();
+                curr.data = min.data;
+                curr.right = remove_helper(curr.right, min.data);
+                root.updateHeight();
+                return curr;
+            }
+        }
     }
 
     /**
      * TODO * <p> * Returns a sorted list of all the keys in this tree.
      */
     public List<K> keys() {
-        return null;  // delete this line and add your code
+
+        List<K> keys = new ArrayList<>();
+        inorderTraversal(root, keys);
+        return keys;
+    }
+
+    private void inorderTraversal(Node<K> curr, List<K> keys)
+    {
+        if (curr != null)
+        {
+            inorderTraversal(curr.left, keys);
+            keys.add(curr.data);
+            inorderTraversal(curr.right, keys);
+        }
     }
 
     static private <K> String toStringPreorder(Node<K> p) {
