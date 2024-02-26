@@ -36,7 +36,7 @@ public class StudentTest {
         System.out.println(bst.root.right.left); // 6
         System.out.println(bst.root.right.right); // 10
         System.out.println(bst.root.last()); // 11
-
+        System.out.println(bst.root.last().parent);
 
 
         for (int i = 0; i != 11; ++i) {

@@ -87,6 +87,7 @@ public class BinarySearchTree<K> implements OrderedSet<K> {
         protected boolean updateAncestorHeight()
         {
             boolean height_change = false;
+
             if (this.parent == null)
             {
                 return height_change;
@@ -99,7 +100,7 @@ public class BinarySearchTree<K> implements OrderedSet<K> {
                 this.parent.updateAncestorHeight();
             }
 
-            return true;
+            return height_change;
         }
 
         /**
@@ -225,6 +226,32 @@ public class BinarySearchTree<K> implements OrderedSet<K> {
             return toStringPreorder(this);
         }
 
+        public void findParent()
+        {
+            return findParent(this.root, node);
+        }
+
+        private Node<K> findParent(Node<K> curr, Node<K> node)
+        {
+            if (curr == null || curr == node)
+                return null; //Node not found, or current Node is the root
+
+            else if (curr.left != null || curr.left == node)
+            {
+                node.parent = curr;
+                return curr;
+            }
+
+            Node<K> leftParent = findParent(curr.left, node);
+            if (leftParent != null)
+            {
+                node.parent = leftParent;
+                return leftParent; //Node found in the left subtree
+            }
+
+            node.parent = findParent(curr.right, node);
+            return findParent(curr.right, node); //Node found in the right subree
+        }
     }
 
     protected Node<K> root;
@@ -245,6 +272,7 @@ public class BinarySearchTree<K> implements OrderedSet<K> {
      * Looks up the key in this tree and, if found, returns the
      * location containing the key.
      */
+
 
     protected Node<K> find(K key, Node<K> curr, Node<K> parent)
     {
@@ -281,6 +309,11 @@ public class BinarySearchTree<K> implements OrderedSet<K> {
      */
     public int height() {
         return get_height(root);
+    }
+
+    public Node<K> getParent()
+    {
+
     }
 
     /**
@@ -320,10 +353,14 @@ public class BinarySearchTree<K> implements OrderedSet<K> {
 
         Node<K> n = find(key, root, null);
 
+        n.findParent();
+
         if (n == null)
         {
             root = new Node<K>(key, null, null);
             root.updateHeight();
+
+            ++ numNodes;
             return root;
         }
 
@@ -333,6 +370,7 @@ public class BinarySearchTree<K> implements OrderedSet<K> {
             if (n.updateHeight())
                 n.updateAncestorHeight();
 
+            ++ numNodes;
             return n.left;
         }
 
@@ -342,6 +380,7 @@ public class BinarySearchTree<K> implements OrderedSet<K> {
             if (n.updateHeight())
                 n.updateAncestorHeight();
 
+            ++ numNodes;
             return n.right;
         }
 
