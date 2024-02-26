@@ -300,40 +300,28 @@ public class BinarySearchTree<K> implements OrderedSet<K> {
      */
     public Node<K> insert(K key) {
 
-        if (root == null)
+        Node<K> n = find(key, root, null);
+
+        if (n == null)
         {
-            root = new Node<>(key);
+            root = new Node<K>(key, null, null);
             return root;
         }
 
-        Node<K> parent = null;
-        Node<K> curr = root;
-
-        while (curr != null)
+        else if (lessThan.test(key, n.data))
         {
-            if (lessThan.test(key, curr.data))
-                curr = curr.left;
-
-
-            else if (lessThan.test(curr.data, key))
-                curr = curr.right;
-
-            else // Key already exists
-            {
-                return null;
-            }
+            n.left = new Node<K>(key, null, null);
+            return n.left;
         }
 
-        Node<K> newNode = new Node<>(key);
-        if (lessThan.test(key, parent.data))
-            parent.left = newNode;
+        else if (lessThan.test(n.data, key))
+        {
+            n.right = new Node<K>(key, null, null);
+            return n.right;
+        }
 
-        else
-            parent.right = newNode;
-
-        newNode.updateHeight();
-
-        return newNode;
+        else // duplicate, return null
+            return null;
     }
 
     /**
