@@ -84,6 +84,24 @@ public class BinarySearchTree<K> implements OrderedSet<K> {
 
         }
 
+        protected boolean updateAncestorHeight()
+        {
+            boolean height_change = false;
+            if (this.parent == null)
+            {
+                return height_change;
+            }
+
+            else
+            {
+                height_change = true;
+                this.updateHeight();
+                this.parent.updateAncestorHeight();
+            }
+
+            return true;
+        }
+
         /**
          * TODO
          * <p>
@@ -305,18 +323,25 @@ public class BinarySearchTree<K> implements OrderedSet<K> {
         if (n == null)
         {
             root = new Node<K>(key, null, null);
+            root.updateHeight();
             return root;
         }
 
         else if (lessThan.test(key, n.data))
         {
             n.left = new Node<K>(key, null, null);
+            if (n.updateHeight())
+                n.updateAncestorHeight();
+
             return n.left;
         }
 
         else if (lessThan.test(n.data, key))
         {
             n.right = new Node<K>(key, null, null);
+            if (n.updateHeight())
+                n.updateAncestorHeight();
+
             return n.right;
         }
 
@@ -360,25 +385,35 @@ public class BinarySearchTree<K> implements OrderedSet<K> {
         else if (lessThan.test(key, curr.data))
         { // remove in left subtree
             curr.left = remove_helper(curr.left, key);
-            root.updateHeight();
+            if (curr.updateHeight())
+                curr.updateAncestorHeight();
+
             return curr;
         }
 
         else if (lessThan.test(curr.data, key))
         { // remove in right subtree
             curr.right = remove_helper(curr.right, key);
-            root.updateHeight();
+            if (curr.updateHeight())
+                curr.updateAncestorHeight();
+
             return curr;
         }
 
         else
         { // remove this node
             if (curr.left == null)
-            return curr.right;
+            {
+                if (curr.updateHeight())
+                    curr.updateAncestorHeight();
+
+                return curr.right;
+            }
 
             else if (curr.right == null)
             {
-                root.updateHeight();
+                if (curr.updateHeight())
+                    curr.updateAncestorHeight();
                 return curr.left;
             }
 
@@ -387,7 +422,8 @@ public class BinarySearchTree<K> implements OrderedSet<K> {
                 Node<K> min = curr.right.first();
                 curr.data = min.data;
                 curr.right = remove_helper(curr.right, min.data);
-                root.updateHeight();
+                if (curr.updateHeight())
+                    curr.updateAncestorHeight();
                 return curr;
             }
         }

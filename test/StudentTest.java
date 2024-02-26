@@ -15,17 +15,19 @@ public class StudentTest {
         TreeMap<Integer, Integer> map = new TreeMap<>();
         int[] a = new int[]{4, 8, 0, 2, 6, 10};
         /*
-         *       4
+         *       4       [2]
          *     /  \
          *    /    \
-         *   0      8
+         *   0      8    [1]
          *    \    / \
-         *     2  6   10
+         *     2  6   10 [0]
          */
         for (Integer key : a) {
             bst.insert(key);
             map.put(key, key);
         }
+
+        bst.insert(11);
 
         System.out.println(bst.root); // 4
         System.out.println(bst.root.left); // 0
@@ -33,6 +35,7 @@ public class StudentTest {
         System.out.println(bst.root.right); // 8
         System.out.println(bst.root.right.left); // 6
         System.out.println(bst.root.right.right); // 10
+        System.out.println(bst.root.last()); // 11
 
 
 
@@ -76,13 +79,48 @@ public class StudentTest {
         }
     }
 
+    @Test
+    public void insertSmallAVL()
+    {
+        AVLTree<Integer> bst = new AVLTree<>((Integer x, Integer y) -> x < y);
+        TreeMap<Integer, Integer> map = new TreeMap<>();
+        int[] a = new int[]{4, 8, 0, 2, 6, 10};
+        /*
+         *       4
+         *     /  \
+         *    /    \
+         *   0      8
+         *    \    / \
+         *     2  6   10
+         */
+        for (Integer key : a) {
+            bst.insert(key);
+            map.put(key, key);
+        }
+
+        bst.remove(10);
+        bst.remove(100); // Shouldn't remove anything
+
+        System.out.println(bst.root); // 4
+        System.out.println(bst.root.left); // 0
+        System.out.println(bst.root.left.right); // 2
+        System.out.println(bst.root.right); // 8
+        System.out.println(bst.root.right.left); // 6
+        System.out.println(bst.root.right.right); // null
+
+        for (int i = 0; i != 10; ++i) {
+            assertEquals(bst.contains(i), map.containsKey(i));
+        }
+    }
+
     /**
      * TODO: Test cases
      */
     @Test
     public void test() {
         insertSmallBST();
-        // your tests go here
+        removeSmallBST();
+
     }
 
 }

@@ -36,6 +36,7 @@ public class AVLTree<K> extends BinarySearchTree<K> {
 
     public Node insert(K key) {
         root = insert(root, key);
+        root.updateHeight();
         return root;
     }
 
