@@ -2,8 +2,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiPredicate;
 
-import static com.sun.javafx.fxml.expression.Expression.lessThan;
-
 /**
  * TODO: This is your second major task.
  * <p>
