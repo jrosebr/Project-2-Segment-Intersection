@@ -133,6 +133,7 @@ public class StudentTest {
         }
 
         avl.remove(8);
+        map.remove(0);
         avl.remove(11); // Shouldn't remove anything
 
         //System.out.println(avl.isAVL());
@@ -144,7 +145,7 @@ public class StudentTest {
         System.out.println(avl.root.right.left); // 6
         System.out.println(avl.root.right.right); // null
 
-        for (int i = 0; i != 10; ++i) {
+        for (int i = 0; i != 11; ++i) {
             assertEquals(avl.contains(i), map.containsKey(i));
         }
     }
