@@ -27,6 +27,43 @@ public class AVLTree<K> extends BinarySearchTree<K> {
             return root.isAVL();
     }
 
+   /* public Node<K> getParent(K key) {
+        Node<K> node = search(key);
+
+        if (node != null)
+            return findParent(root, node);
+
+        else
+            return null;
+    }
+
+    private Node<K> findParent(Node<K> curr, Node<K> node)
+    {
+        if (curr == null || curr == node) // The Node is either not found or is already the root
+        {
+            node.parent = null;
+            return null;
+        }
+
+        // The node has been found
+        else if ((curr.left != null && curr.left == node) || (curr.right != null && curr.right == node))
+        {
+            node.parent = curr;
+            System.out.println(curr);
+            return curr;
+        }
+
+        // The node has not been found, so we recursively go through the right left and right subtrees
+        Node<K> leftParent = findParent(curr.left, node);
+        if (leftParent != null)
+        {
+            return leftParent;
+        }
+
+        else
+            return findParent(curr.right, node);
+    }*/
+
     /**
      * TODO
      * Inserts the given key into this AVL tree such that the ordering
@@ -36,20 +73,39 @@ public class AVLTree<K> extends BinarySearchTree<K> {
 
     public Node insert(K key) {
         root = insert(root, key);
-        root.updateHeight();
+
+        getParent(key);
+
+        root.updateAncestorHeight();
         return root;
     }
 
     private Node insert(Node<K> curr, K key)
     {
         if (curr == null)
+        {
+            ++ numNodes;
             return new Node(key);
+        }
 
-        else if (lessThan.test(key, curr.data))
+        getParent(key);
+
+        if (lessThan.test(key, curr.data))
+        {
+            getParent(key);
+            curr.updateAncestorHeight();
+
             curr.left = insert(curr.left, key);
+        }
 
         else if (lessThan.test(curr.data, key))
+        {
+            getParent(key);
+
+            curr.updateAncestorHeight();
+
             curr.right = insert(curr.right, key);
+        }
 
         else
             return curr;
@@ -75,6 +131,7 @@ public class AVLTree<K> extends BinarySearchTree<K> {
         else if (balance > 1 && lessThan.test(curr.data, key))
         {
             curr.left = leftRotate(curr.left);
+
             return rightRotate(curr);
         }
 
@@ -83,6 +140,7 @@ public class AVLTree<K> extends BinarySearchTree<K> {
         else if (balance < -1 && lessThan.test(key, curr.data))
         {
             curr.right = rightRotate(curr.right);
+
             return leftRotate(curr);
         }
 
@@ -144,7 +202,8 @@ public class AVLTree<K> extends BinarySearchTree<K> {
      * Removes the key from this BST. If the key is not in the tree,
      * nothing happens.
      */
-    public void remove(K key) {
+    public void remove(K key)
+    {
         root = remove(root, key);
     }
 
@@ -153,17 +212,24 @@ public class AVLTree<K> extends BinarySearchTree<K> {
         if (curr == null)
         {
             root.updateHeight();
+            getParent(key);
             return null;
         }
 
         else if (lessThan.test(key, curr.data))
         { // remove in left subtree
             curr.left = remove(curr.left, key);
+
+            curr.updateAncestorHeight();
+            getParent(key);
         }
 
         else if (lessThan.test(curr.data, key))
         { // remove in right subtree
             curr.right = remove(curr.right, key);
+
+            curr.updateAncestorHeight();
+            getParent(key);
         }
 
         else // Remove this node
@@ -188,6 +254,8 @@ public class AVLTree<K> extends BinarySearchTree<K> {
 
                 else // One child case
                     curr = temp;
+
+                --numNodes;
             }
 
             else
@@ -198,6 +266,7 @@ public class AVLTree<K> extends BinarySearchTree<K> {
                 curr.data = temp.data;
 
                 curr.right = remove(curr.right, temp.data);
+                --numNodes;
             }
         }
 
@@ -232,6 +301,7 @@ public class AVLTree<K> extends BinarySearchTree<K> {
         else if (balance < -1 && getBalance(curr.right) > 0)
         {
             curr.right = rightRotate(curr.right);
+
             return leftRotate(curr);
         }
 
