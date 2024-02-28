@@ -253,7 +253,10 @@ public class AVLTree<K> extends BinarySearchTree<K> {
                 }
 
                 else // One child case
+                {
                     curr = temp;
+                    curr.updateAncestorHeight();
+                }
 
                 --numNodes;
             }
@@ -266,7 +269,6 @@ public class AVLTree<K> extends BinarySearchTree<K> {
                 curr.data = temp.data;
 
                 curr.right = remove(curr.right, temp.data);
-                --numNodes;
             }
         }
 
