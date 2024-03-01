@@ -133,8 +133,8 @@ public class StudentTest {
         }
 
         avl.remove(4);
-        map.remove(4);
-        avl.remove(11); // Shouldn't remove anything
+        //map.remove(4);
+        avl.remove(4); // Shouldn't remove anything
 
         //System.out.println(avl.isAVL());
 

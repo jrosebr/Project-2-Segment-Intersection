@@ -72,12 +72,18 @@ public class AVLTree<K> extends BinarySearchTree<K> {
      */
 
     public Node insert(K key) {
-        root = insert(root, key);
 
-        getParent(key);
+        Node<K> search = search(key);
 
-        root.updateAncestorHeight();
-        return root;
+        if (search == null)
+        {
+            root = insert(root, key);
+            getParent(key);
+            return root;
+        }
+
+        else
+            return null;
     }
 
     private Node insert(Node<K> curr, K key)
@@ -92,7 +98,6 @@ public class AVLTree<K> extends BinarySearchTree<K> {
 
         if (lessThan.test(key, curr.data))
         {
-            getParent(key);
             curr.updateAncestorHeight();
 
             curr.left = insert(curr.left, key);
@@ -100,15 +105,17 @@ public class AVLTree<K> extends BinarySearchTree<K> {
 
         else if (lessThan.test(curr.data, key))
         {
-            getParent(key);
-
             curr.updateAncestorHeight();
 
             curr.right = insert(curr.right, key);
         }
 
         else
+        {
+            ++numNodes;
+            getParent(key);
             return curr;
+        }
 
 
         curr.height = 1 + Math.max(height(curr.left), height(curr.right));
@@ -161,6 +168,7 @@ public class AVLTree<K> extends BinarySearchTree<K> {
         y.height = 1 + Math.max(height(y.left), height(y.right));
         x.height = 1 + Math.max(height(x.left), height(x.right));
 
+        x.updateAncestorHeight();
         return x;
     }
 
@@ -176,6 +184,8 @@ public class AVLTree<K> extends BinarySearchTree<K> {
         // Update heights
         x.height = 1 + Math.max(height(x.left), height(x.right));
         y.height = 1 + Math.max(height(y.left), height(y.right));
+
+        y.updateAncestorHeight();
 
         return y;
     }

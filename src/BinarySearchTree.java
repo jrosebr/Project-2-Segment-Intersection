@@ -88,11 +88,9 @@ public class BinarySearchTree<K> implements OrderedSet<K> {
         {
             Node<K> node = this;
 
-            while (node != null) {
-                int left_height = get_height(node.left);
-                int right_height = get_height(node.right);
-
-                node.height = 1 + Math.max(left_height, right_height);
+            while (node != null)
+            {
+                node.updateHeight();
 
                 if (node.parent == null) {
                     break; // Base case to stop recursion when parent is null
