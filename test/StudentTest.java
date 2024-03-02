@@ -60,15 +60,17 @@ public class StudentTest {
             map.put(key, key);
         }
 
-        bst.remove(10);
-        bst.remove(100); // Shouldn't remove anything
+        bst.remove(4);
+        map.remove(4);
+        bst.remove(2);
+        bst.remove(4); // Shouldn't remove anything
 
         System.out.println(bst.root); // 4
-        System.out.println(bst.root.left); // 0
+        /*System.out.println(bst.root.left); // 0
         System.out.println(bst.root.left.right); // 2
         System.out.println(bst.root.right); // 8
         System.out.println(bst.root.right.left); // 6
-        System.out.println(bst.root.right.right); // null
+        System.out.println(bst.root.right.right); // null*/
 
         for (int i = 0; i != 10; ++i) {
             assertEquals(bst.contains(i), map.containsKey(i));
@@ -132,8 +134,10 @@ public class StudentTest {
             map.put(key, key);
         }
 
+        //avl.remove(11);
         avl.remove(4);
-        //map.remove(4);
+        map.remove(4);
+        avl.remove(2);
         avl.remove(4); // Shouldn't remove anything
 
         //System.out.println(avl.isAVL());

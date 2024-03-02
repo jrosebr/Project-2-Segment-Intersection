@@ -27,7 +27,7 @@ public class AVLTree<K> extends BinarySearchTree<K> {
             return root.isAVL();
     }
 
-   /* public Node<K> getParent(K key) {
+   public Node<K> getParent(K key) {
         Node<K> node = search(key);
 
         if (node != null)
@@ -49,7 +49,6 @@ public class AVLTree<K> extends BinarySearchTree<K> {
         else if ((curr.left != null && curr.left == node) || (curr.right != null && curr.right == node))
         {
             node.parent = curr;
-            System.out.println(curr);
             return curr;
         }
 
@@ -62,7 +61,7 @@ public class AVLTree<K> extends BinarySearchTree<K> {
 
         else
             return findParent(curr.right, node);
-    }*/
+    }
 
     /**
      * TODO
@@ -190,7 +189,8 @@ public class AVLTree<K> extends BinarySearchTree<K> {
         return y;
     }
 
-    private int height(Node node) {
+    private int height(Node node)
+    {
         if (node == null) {
             return 0;
         }
@@ -214,32 +214,29 @@ public class AVLTree<K> extends BinarySearchTree<K> {
      */
     public void remove(K key)
     {
-        root = remove(root, key);
+        Node<K> search = search(key);
+
+        if (search != null)
+        {
+            root = remove_helper(root, key);
+        }
     }
 
-    private Node<K> remove(Node<K> curr, K key)
+    private Node<K> remove_helper(Node<K> curr, K key)
     {
         if (curr == null)
         {
-            root.updateHeight();
-            getParent(key);
             return null;
         }
 
         else if (lessThan.test(key, curr.data))
         { // remove in left subtree
-            curr.left = remove(curr.left, key);
-
-            curr.updateAncestorHeight();
-            getParent(key);
+            curr.left = remove_helper(curr.left, key);
         }
 
         else if (lessThan.test(curr.data, key))
         { // remove in right subtree
-            curr.right = remove(curr.right, key);
-
-            curr.updateAncestorHeight();
-            getParent(key);
+            curr.right = remove_helper(curr.right, key);
         }
 
         else // Remove this node
@@ -258,14 +255,13 @@ public class AVLTree<K> extends BinarySearchTree<K> {
                 // No child case
                 if (temp == null)
                 {
-                    temp = curr;
                     curr = null;
                 }
 
                 else // One child case
                 {
+                    temp.parent = curr.parent;
                     curr = temp;
-                    curr.updateAncestorHeight();
                 }
 
                 --numNodes;
@@ -278,8 +274,9 @@ public class AVLTree<K> extends BinarySearchTree<K> {
 
                 curr.data = temp.data;
 
-                curr.right = remove(curr.right, temp.data);
+                curr.right = remove_helper(curr.right, temp.data);
             }
+
         }
 
         if (curr == null)
@@ -318,7 +315,10 @@ public class AVLTree<K> extends BinarySearchTree<K> {
         }
 
         else // Return the unchanged node pointer
+        {
+            curr.updateAncestorHeight();
             return curr;
+        }
     }
 
 
