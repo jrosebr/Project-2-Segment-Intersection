@@ -218,7 +218,8 @@ public class AVLTree<K> extends BinarySearchTree<K> {
 
         if (search != null)
         {
-            root = remove_helper(root, key);
+            super.remove(key);
+            rebalance(search.parent);
         }
     }
 

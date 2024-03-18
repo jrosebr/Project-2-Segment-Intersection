@@ -42,6 +42,8 @@ public class BinarySearchTree<K> implements OrderedSet<K> {
             this.data = data;
             this.left = left;
             this.right = right;
+
+            updateAncestorHeight();
         }
 
         /**
